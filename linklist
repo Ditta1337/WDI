@@ -1,0 +1,164 @@
+def zadanie3():
+
+    class LinkList():
+        def __init__(self, value = 0):
+            self.val = value
+            self.next = None
+
+        def append(self, value):
+            if self.next == None:
+                self.next = LinkList(value)
+                return
+            self.next.append(value)
+
+        def print(self):
+            if self.next != None:
+                item = self.next
+                while item.next != None:
+                    print(item.val, end=", ")
+                    item = item.next
+                print(item.val)
+
+
+    def merge(list1, list2):
+        if list1.next == None:
+            return list2
+        if list2.next == None:
+            return list1
+        
+        linklist = LinkList()
+
+        while list1.next != None or list2.next != None:
+            if list1.next != None and (list2.next == None or (list1.next.val <= list2.next.val)):
+                linklist.append(list1.next.val)
+                list1 = list1.next #dla kazdego elementu list1 sprawdzamy, czy istnieja elementy spelaniajace warunek zadania
+            else:
+                linklist.append(list2.next.val)
+                list2 = list2.next #jak nie istnieja to dodajemy element z list2
+
+        return linklist
+
+    def merge_rek(list1, list2, is_first = True):
+        if list1.next == None and list2.next == None:
+            return None
+        if is_first:
+            linklist = LinkList()
+            linklist.next = merge_rek(list1, list2, is_first = False)
+            return linklist
+        if list1.next != None and (list2.next == None or (list1.next.val <= list2.next.val)):
+            linklist = LinkList(list1.next.val)
+            linklist.next = merge_rek(list1.next, list2, False)
+            return linklist
+        else:
+            linklist = LinkList(list2.next.val)
+            linklist.next = merge_rek(list1, list2.next, False)
+            return linklist
+
+    list1 = LinkList()
+    list2 = LinkList()
+    list1.append(1)
+    list1.append(3)
+    list1.append(5)
+    list2.append(2)
+    list2.append(4)
+    list2.append(6)
+    list1.print()
+    print("-------")
+    list2.print()
+    print("-------")
+    list3 = merge(list1, list2)
+    list3.print()
+    print("-----------------")
+    list4 = merge_rek(list1, list2)
+    list4.print()
+        
+def zadanie4():
+    class LinkList():
+        def __init__(self, value = 0):
+            self.val = value
+            self.next = None
+
+        def push(self, value):
+            item = LinkList(value)
+            item.next = self.next
+            self.next = item
+        
+        def print(self):
+            if self.next != None:
+                item = self.next
+                while item.next != None:
+                    print(item.val, end=", ")
+                    item = item.next
+                print(item.val)
+
+    def reverse(list1):
+        if list1.next == None:
+            return
+        
+        linklist = LinkList()
+        thelist = list1
+
+        while list1.next != None:
+            linklist.push(list1.next.val)
+            list1 = list1.next
+        
+        thelist.next = linklist.next
+
+    list1 = LinkList()
+    list1.push(3)
+    list1.push(2)
+    list1.push(1)
+    list1.print()
+    reverse(list1)
+    list1.print()
+
+def zadanie5():
+    class LinkList():
+        def __init__(self, value=0):
+            self.val=value
+            self.next=None
+        
+        def append(self, value):
+            if self.next == None:
+                self.next = LinkList(value)
+                return
+            self.next.append(value)
+            
+
+        def print(self):
+            if self.next != None:
+                item = self.next
+                while item.next != None:
+                    print(item.val, end=", ")
+                    item = item.next
+                print(item.val)
+
+    def split(list1):
+        dig_arrays = [LinkList() for _ in range(10)]
+
+        while list1.next != None:
+            last_dig = list1.next.val % 10
+            dig_arrays[last_dig].append(list1.next.val)
+            list1 = list1.next
+        
+        linklist = dig_arrays[0]
+        first = linklist
+        for i in range(1, 10):
+            while linklist.next != None:
+                linklist = linklist.next
+            linklist.next = dig_arrays[i].next
+            
+        return first
+
+    
+
+    
+    list1 = LinkList()
+    list1.append(1)
+    list1.append(38)
+    list1.append(2)
+    list1.append(3)
+    list1.append(23)
+    list1.print()
+    list1 = split(list1)
+    list1.print()
